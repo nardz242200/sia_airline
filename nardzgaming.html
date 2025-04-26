@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Clone</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #70c5ce;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: url('background.png') no-repeat center center/cover;
+        }
+
+        .bird {
+    position: absolute;
+    width: 45px; 
+    height: 45px;
+    background: radial-gradient(circle at 30% 30%, #ffeb3b, #ffa000);
+    border-radius: 50%;
+    top: 50%;
+    left: 50px;
+    transition: transform 0.1s ease-out; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+}
+
+
+.bird::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 7px;
+    background-color: orange;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-radius: 3px;
+}
+
+
+.bird {
+    position: absolute;
+    width: 50px; 
+    height: 50px;
+    background: radial-gradient(circle at 30% 30%, #ffeb3b, #ffa000); 
+    border-radius: 50%;
+    top: 50%;
+    left: 50px;
+    transition: transform 0.1s ease-out; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.bird::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 8px;
+    background-color: orange;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-radius: 3px;
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%); 
+}
+
+
+.bird::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 50%;
+    top: 20%;
+    left: 60%;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
+}
+
+
+.wing {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    background: radial-gradient(circle, #ffcc00, #ff8800);
+    border-radius: 50%;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s ease-in-out;
+}
+
+
+.flap .wing {
+    transform: translate(-50%, -50%) rotate(-20deg);
+}
+
+.fall .wing {
+    transform: translate(-50%, -50%) rotate(10deg);
+}
+
+
+.flap {
+    transform: rotate(-20deg) scale(1.05); 
+}
+
+.fall {
+    transform: rotate(20deg) scale(0.95); 
+}
+
+
+        .pipe {
+    position: absolute;
+    width: 85px; 
+    background: linear-gradient(to bottom, #0b9c00, #067500); 
+    border: 4px solid #004d00; 
+    border-radius: 12px; 
+    left: 100vw;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4); 
+}
+
+
+.pipe::before {
+    content: "";
+    position: absolute;
+    width: 110px; 
+    height: 30px;
+    background: linear-gradient(to bottom, #0eaf00, #088000);
+    border-radius: 8px;
+    top: -28px;
+    left: -12px; 
+    border: 4px solid #004d00;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.pipe::after {
+    content: "";
+    position: absolute;
+    width: 110px;
+    height: 30px;
+    background: linear-gradient(to bottom, #088000, #067500);
+    border-radius: 8px;
+    bottom: -28px;
+    left: -12px;
+    border: 4px solid #004d00;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.score {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+    z-index: 10; /* Keep it above other elements */
+}
+
+.game-over {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    display: none;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease-in-out;
+    z-index: 5;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+
+
+.game-over button {
+    background: #ff5722;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-top: 15px;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.game-over button:hover {
+    background: #e64a19;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(255, 87, 34, 0.5);
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+.exit-btn {
+            position: absolute;
+            bottom: 20px;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+    
+
+        .exit-btn {
+            right: 20px;
+            background: #f44336;
+            color: white;}
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="bird" id="bird">
+            <div class="wing"></div>
+        </div>
+        
+        <div class="score" id="score">Score: 0</div>
+        <div class="game-over" id="gameOver">Game Over! Your score: <span id="finalScore"></span><br><button onclick="location.reload()">Restart</button></div>
+    </div>
+   
+    <button class="exit-btn" id="exitBtn">Exit</button>
+</div>
+    </div>
+    <script>
+        const bird = document.getElementById('bird');
+        const scoreDisplay = document.getElementById('score');
+        const gameOverDisplay = document.getElementById('gameOver');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const gameContainer = document.querySelector('.game-container');
+
+        let birdY = 300;
+        let gravity = 1;
+        let isGameOver = false;
+        let score = 0;
+        let pipes = [];
+
+        function flap() {
+    if (isGameOver) return;
+    birdY -= 25;
+    bird.style.top = birdY + 'px';
+    bird.classList.add("flap");
+
+    setTimeout(() => {
+        bird.classList.remove("flap");
+    }, 150);
+}
+
+
+setInterval(() => {
+    if (!isGameOver) {
+        birdY += gravity;
+        bird.style.top = birdY + 'px';
+        bird.classList.add("fall");
+
+        setTimeout(() => {
+            bird.classList.remove("fall");
+        }, 200);
+
+        checkCollision();
+    }
+}, 20);
+
+
+        function startGame() {
+            document.addEventListener('keydown', flap);
+            document.addEventListener('click', flap);
+
+            setInterval(() => {
+                if (!isGameOver) {
+                    birdY += gravity;
+                    bird.style.top = birdY + 'px';
+                    checkCollision();
+                }
+            }, 20);
+            generatePipes();
+        }
+
+        function generatePipes() {
+            setInterval(() => {
+                if (isGameOver) return;
+
+                let gap = 200;
+                let pipeHeight = Math.random() * (window.innerHeight - 400) + 100;
+
+                let topPipe = document.createElement('div');
+                topPipe.classList.add('pipe');
+                topPipe.style.height = pipeHeight + 'px';
+                topPipe.style.top = '0';
+                gameContainer.appendChild(topPipe);
+
+                let bottomPipe = document.createElement('div');
+                bottomPipe.classList.add('pipe');
+                bottomPipe.style.height = (window.innerHeight - pipeHeight - gap) + 'px';
+                bottomPipe.style.bottom = '0';
+                gameContainer.appendChild(bottomPipe);
+
+                let pipeX = window.innerWidth;
+                pipes.push({ topPipe, bottomPipe, passed: false });
+
+                function movePipes() {
+                    if (isGameOver) {
+                        clearInterval(pipeInterval);
+                        return;
+                    }
+
+                    pipeX -= 5;
+                    topPipe.style.left = pipeX + 'px';
+                    bottomPipe.style.left = pipeX + 'px';
+
+                    if (pipeX + 60 < 50 && !pipes[0].passed) { 
+                        pipes[0].passed = true;
+                        score++;
+                        scoreDisplay.innerText = 'Score: ' + score;
+                    }
+
+                    if (pipeX < -20) {
+                        topPipe.remove();
+                        bottomPipe.remove();
+                        pipes.shift();
+                        clearInterval(pipeInterval);
+                    }
+                }
+
+                let pipeInterval = setInterval(movePipes, 20);
+            }, 2000);
+        }
+
+        function checkCollision() {
+            const birdRect = bird.getBoundingClientRect();
+
+            pipes.forEach(pipePair => {
+                const topRect = pipePair.topPipe.getBoundingClientRect();
+                const bottomRect = pipePair.bottomPipe.getBoundingClientRect();
+
+                if (
+                    (birdRect.left < topRect.left + topRect.width &&
+                    birdRect.left + birdRect.width > topRect.left &&
+                    birdRect.top < topRect.top + topRect.height) ||
+                    
+                    (birdRect.left < bottomRect.left + bottomRect.width &&
+                    birdRect.left + birdRect.width > bottomRect.left &&
+                    birdRect.top + birdRect.height > bottomRect.top)
+                ) {
+                    endGame();
+                }
+            });
+
+            if (birdY + birdRect.height >= window.innerHeight || birdY < 0) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            isGameOver = true;
+            finalScoreDisplay.innerText = score;
+            gameOverDisplay.style.display = 'block';
+        }
+
+        startGame();
+        function endGame() {
+    isGameOver = true;
+    
+    if (score >= 7) {
+       
+        let buttonContainer = document.createElement('div');
+        buttonContainer.style.position = 'absolute';
+        buttonContainer.style.top = '50%';
+        buttonContainer.style.left = '50%';
+        buttonContainer.style.transform = 'translate(-50%, -50%)';
+        buttonContainer.style.background = 'rgba(0, 0, 0, 0.85)';
+        buttonContainer.style.padding = '30px';
+        buttonContainer.style.borderRadius = '10px';
+        buttonContainer.style.textAlign = 'center';
+        buttonContainer.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.3)';
+        
+    
+        let title = document.createElement('p');
+        title.style.color = 'white';
+        title.style.fontSize = '24px';
+        title.style.marginBottom = '15px';
+        title.innerText = 'Congratulations! Choose your flight for 50% Discount:';
+        buttonContainer.appendChild(title);
+
+       
+        let localBtn = document.createElement('button');
+        localBtn.innerText = 'Local Flight';
+        localBtn.style.background = '#4CAF50';
+        localBtn.style.color = 'white';
+        localBtn.style.border = 'none';
+        localBtn.style.padding = '12px 20px';
+        localBtn.style.fontSize = '18px';
+        localBtn.style.cursor = 'pointer';
+        localBtn.style.borderRadius = '10px';
+        localBtn.style.marginRight = '10px';
+        localBtn.onclick = () => window.location.href = 'loc.html';
+        
+       
+        let intlBtn = document.createElement('button');
+        intlBtn.innerText = 'International Flight';
+        intlBtn.style.background = '#2196F3';
+        intlBtn.style.color = 'white';
+        intlBtn.style.border = 'none';
+        intlBtn.style.padding = '12px 20px';
+        intlBtn.style.fontSize = '18px';
+        intlBtn.style.cursor = 'pointer';
+        intlBtn.style.borderRadius = '10px';
+        intlBtn.onclick = () => window.location.href = 'int.html';
+
+       
+        buttonContainer.appendChild(localBtn);
+        buttonContainer.appendChild(intlBtn);
+
+        document.body.appendChild(buttonContainer);
+    } else {
+        finalScoreDisplay.innerText = score;
+        gameOverDisplay.style.display = 'block';
+    }
+}
+
+function exitGame() {
+    const confirmExit = window.confirm("Are you sure you want to exit? You will not get the discount.");
+    if (confirmExit) {
+        window.location.href = "index.html";
+    }
+}
+
+exitBtn.addEventListener('click', exitGame);
+
+     
+        
+        setInterval(updateGame, 20);
+        generatePipes();
+    </script>
+</body>
+</html>

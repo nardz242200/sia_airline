@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-image: url(bg3.jpg); 
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            overflow: hidden;
+            padding: 10px 20px;
+        }
+
+        .navbar .logo h2 {
+            color: white;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            float: right;
+        }
+
+        .nav-links li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .flight-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .flight {
+            background: rgba(32, 23, 23, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: white;
+        }
+
+        .flight h3 {
+            margin-top: 10px;
+        }
+
+        .flight p {
+            color: white;
+        }
+
+        .flight button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .flight button:hover {
+            background-color: #0056b3;
+        }
+        .about-btn {
+    display: inline-block;
+    background-color: #007bff; 
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.about-btn:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05);
+}
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>✈️ Local Flights</h2>
+            <ul class="nav-links">
+                <li><a href="index.html">🏠 Home</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <header>
+        <h1>Book Your Local Flight</h1><br><br>
+        <a href="aboutus.html" class="about-btn">📋 About Us</a>
+    </header>
+
+    <section class="flight-list" id="flightList"></section>
+
+    <script>
+         const flights = [
+        { id: 1, from: "Manila", to: "Cebu", date: "2025-04-10", time: "08:00 AM", price: 1500.00, code: "FL123" },
+        { id: 2, from: "Davao", to: "Manila", date: "2025-04-12", time: "02:00 PM", price: 2200.00, code: "FL456" },
+        { id: 3, from: "Cebu", to: "Iloilo", date: "2025-04-15", time: "09:30 AM", price: 1500.00, code: "FL789" },
+        { id: 4, from: "Manila", to: "Iloilo", date: "2025-04-16", time: "07:00 AM", price: 2000.00, code: "FL101" },
+        { id: 5, from: "Davao", to: "Iloilo", date: "2025-04-18", time: "11:00 AM", price: 1800.00, code: "FL202" },
+        { id: 6, from: "Cebu", to: "Davao", date: "2025-04-20", time: "04:00 PM", price: 2000.00, code: "FL303" },
+        { id: 7, from: "Manila", to: "Davao", date: "2025-04-22", time: "01:00 PM", price: 2500.00, code: "FL404" },
+        { id: 8, from: "Iloilo", to: "Cebu", date: "2025-04-25", time: "10:00 AM", price: 1800.00, code: "FL505" },
+        { id: 9, from: "Manila", to: "Bacolod", date: "2025-04-27", time: "09:30 AM", price: 1200.00, code: "FL606" },
+        { id: 10, from: "Cebu", to: "Bohol", date: "2025-04-28", time: "12:00 PM", price: 1500.00, code: "FL707" },
+        { id: 11, from: "Davao", to: "Bohol", date: "2025-04-30", time: "03:30 PM", price: 1700.00, code: "FL808" },
+        { id: 12, from: "Manila", to: "Tagbilaran", date: "2025-05-02", time: "06:30 AM", price: 1900.00, code: "FL909" }
+    ];
+
+    function loadFlights() {
+        const flightList = document.getElementById("flightList");
+        flightList.innerHTML = "";
+        
+        flights.forEach(flight => {
+            flightList.innerHTML += `
+                <div class="flight">
+                    <h3>${flight.from} ✈️ ${flight.to}</h3>
+                    <p>📅 Date: ${flight.date}</p>
+                    <p>⏰ Time: ${flight.time}</p>
+                    <p>💰 Price: ₱${flight.price.toFixed(2)}</p>
+                    <p>✈️ Airplane Code: ${flight.code}</p>
+                    <button onclick="bookFlight(${flight.id})">Book Now</button>
+                </div>
+            `;
+        });
+    }
+
+    function bookFlight(id) {
+        const flight = flights.find(item => item.id === id);
+        if (flight) {
+            window.location.href = `booking.html?id=${flight.id}&from=${flight.from}&to=${flight.to}&date=${flight.date}&time=${flight.time}&price=${flight.price}&code=${flight.code}`;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadFlights);
+    </script>
+</body>
+
+</html>

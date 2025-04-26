@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Airline Ticketing</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            text-align: center;
+            color: white;
+        }
+
+        .welcome-container {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #0f3057, #005792);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 50px 50px;
+        }
+
+        .welcome-container h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .welcome-container p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .category-container {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding: 20px 10px;
+            border-radius: 20px;
+        }
+
+        .category-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px;
+            text-decoration: none;
+            color: #333;
+            text-align: center;
+            width: 220px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+        }
+
+        .category-item img {
+            width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 12px;
+            border-radius: 12px;
+        }
+
+        .category-item h3 {
+            margin-top: 5px;
+            font-size: 18px;
+            color: rgb(36, 33, 33);
+        }
+
+        .category-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: #007bff;
+            color: white;
+        }
+
+        .category-item:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            background-color: #0f3057;
+            color: white;
+            padding: 15px 10px;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container h1 {
+                font-size: 28px;
+            }
+
+            .welcome-container p {
+                font-size: 15px;
+            }
+
+            .category-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .category-item {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .category-item img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="welcome-container">
+        <h1>Welcome to Airline Ticket Reservation ✈️</h1>
+        <p>Book your next flight with ease and convenience!</p>
+
+        <div class="category-container">
+            <a href="local1.html" class="category-item">
+                <img src="1.jpg" alt="Local Flights">
+                <h3>🏠 Local Flights</h3>
+            </a>
+            <a href="international1.html" class="category-item">
+                <img src="2.jpg" alt="International Flights">
+                <h3>🌍 International Flights</h3>
+            </a>
+            <a href="ins.html" class="category-item">
+                <img src="3.jpg" alt="Promos & Discounts">
+                <h3>🔥 Promos & Discounts</h3>
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 SkyFly Airlines. All Rights Reserved. ✈️</p>
+    </footer>
+
+</body>
+
+</html>

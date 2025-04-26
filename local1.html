@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Full Screen Video</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: black;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <video id="introVideo" autoplay muted playsinline>
+    <source src="vid.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    const video = document.getElementById("introVideo");
+
+    // Set playback speed to 2x
+    video.playbackRate = 4.0;
+
+    // Go fullscreen once the video starts playing
+    video.addEventListener("play", () => {
+      if (document.fullscreenElement) return; // Already in fullscreen
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) { // Safari
+        video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) { // IE11
+        video.msRequestFullscreen();
+      }
+    });
+
+    // Redirect after video ends
+    video.addEventListener("ended", () => {
+      window.location.href = "local.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking Confirmation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('5.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 70%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px dashed #888; /* ← changed to dashed and slightly darker for better visibility */
+}
+
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+      border-bottom: 2px dashed #666;
+      padding-bottom: 10px;
+    }
+
+    .info-group {
+      margin: 12px 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .info-group strong {
+      display: inline-block;
+      width: 140px;
+      color: #555;
+    }
+
+    #reference {
+      color: #28a745;
+    }
+
+    #seat {
+      color: #ff6600;
+    }
+
+    #totalPrice {
+      font-weight: bold;
+      color: #2d2d2d;
+    }
+
+    #orNumber {
+      color: #6f42c1;
+      font-weight: bold;
+    }
+
+    .footer-line {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      border-top: 1px dashed #aaa;
+      padding-top: 10px;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #aa0000;
+      text-align: center;
+    }
+
+    .button-group {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .print-btn {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .print-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .return-btn {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    .return-btn:hover {
+      background-color: #b52b3a;
+    }
+
+    @media print {
+      .btn, .note {
+        display: none;
+      }
+
+      .container {
+        box-shadow: none;
+        border: none;
+      }
+    }
+
+    strong {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Temporary Receipt</h2>
+    <div class="info-group"><strong>Air Line:</strong> <span id="airLine"></span></div>
+    <div class="info-group"><strong>Name:</strong> <span id="name"></span></div>
+    <div class="info-group"><strong>Email:</strong> <span id="email"></span></div>
+    <div class="info-group"><strong>Phone:</strong> <span id="phone"></span></div>
+    <div class="info-group"><strong>From:</strong> <span id="from"></span></div>
+    <div class="info-group"><strong>To:</strong> <span id="to"></span></div>
+    <div class="info-group"><strong>Date:</strong> <span id="date"></span></div>
+    <div class="info-group"><strong>Time:</strong> <span id="time"></span></div>
+    <div class="info-group"><strong>Flight Class:</strong> <span id="class"></span></div>
+    <div class="info-group"><strong>Seat:</strong> <span id="seat"></span></div>
+    <div class="info-group"><strong>Payment Method:</strong> <span id="payment"></span></div>
+    <div class="info-group"><strong>Reference No:</strong> <span id="reference"></span></div>
+    <div class="info-group"><strong>Total Price:</strong> ₱<span id="totalPrice"></span></div>
+    <div class="info-group"><strong>Plane Code:</strong> <span id="code"></span></div>
+    <div class="info-group"><strong>OR Number:</strong> <span id="orNumber"></span></div>
+
+    <div class="footer-line">Thank you for booking with us!</div>
+    <strong>Note:</strong> This is a temporary receipt. The original receipt must be collected at the terminal based on your origin.
+
+    <div class="button-group">
+      <button class="btn print-btn" onclick="printPage()">🖨️ Print</button>
+      <button class="btn return-btn" onclick="goBack()">🔙 Return</button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    // Correctly match URL parameter keys
+    document.getElementById("airLine").textContent = params.get("airLine") || "N/A";
+    document.getElementById("name").textContent = params.get("name") || "N/A";
+    document.getElementById("email").textContent = params.get("email") || "N/A";
+    document.getElementById("phone").textContent = params.get("phone") || "N/A";
+    document.getElementById("from").textContent = params.get("from") || "N/A";
+    document.getElementById("to").textContent = params.get("to") || "N/A";
+    document.getElementById("date").textContent = params.get("date") || "N/A";
+    document.getElementById("time").textContent = params.get("time") || "N/A";
+    document.getElementById("class").textContent = params.get("class") || "N/A";
+    document.getElementById("seat").textContent = params.get("seat") || "N/A";
+    document.getElementById("payment").textContent = params.get("payment") || "N/A";
+    document.getElementById("reference").textContent = params.get("reference") || "N/A";
+    document.getElementById("totalPrice").textContent = params.get("totalPrice") || "0.00";
+    document.getElementById("code").textContent = params.get("code") || "N/A";
+
+    function generateORNumber() {
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+      const randomPart = Math.floor(1000 + Math.random() * 9000);
+      return `${datePart}-${randomPart}`;
+    }
+
+    document.getElementById("orNumber").textContent = generateORNumber();
+
+    function printPage() {
+      window.print();
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

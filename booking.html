@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flight Booking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+     
+    }
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .bg-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    .container {
+      width: 900px;
+      max-width: 700px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-left: 100px;
+    }
+
+    input, select {
+      display: block;
+      width: 70%;
+      padding: 10px 12px;
+      margin: 5px auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 70%;
+      display: block;
+      margin: 10px auto;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .back-btn {
+      background-color: rgb(216, 34, 34);
+      margin-top: 10px;
+    }
+
+    .payment-details {
+      display: none;
+      width: 70%;
+      padding: 10px 12px;
+      margin: 5px auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: antiquewhite;
+    }
+
+    .seat-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .seat {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      margin: 2px;
+      text-align: center;
+      line-height: 40px;
+      border: 1px solid #444;
+      cursor: pointer;
+    }
+
+    .seat.taken {
+      background-color: gray;
+      border-color: #666;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      color: red;
+      font-weight: bold;
+      opacity: 0.8;
+    }
+
+    .seat.window { background-color: #a3d9a5; }
+    .seat.middle { background-color: #f7d794; }
+    .seat.aisle { background-color: #f5b7b1; }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      border-radius: 4px;
+      border: 1px solid #333;
+    }
+
+    .window-color { background-color: #a3d9a5; }
+    .middle-color { background-color: #f7d794; }
+    .aisle-color { background-color: #f5b7b1; }
+    .taken-color { background-color: red; }
+    #flightDetails{
+        margin-left: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-container">
+    <div class="bg-slide active" style="background-image: url('4.jpg');"></div>
+    <div class="bg-slide" style="background-image: url('5.jpg');"></div>
+    <div class="bg-slide" style="background-image: url('6.jpg');"></div>
+  </div>
+  <div class="container">
+    <h2>Confirm Your Booking</h2>
+    <div id="flightDetails">
+      <p><strong>Airline:</strong> <span id="airLine"></span></p>
+      <p><strong>From:</strong> <span id="from"></span></p>
+      <p><strong>To:</strong> <span id="to"></span></p>
+      <p><strong>Date:</strong> <span id="date"></span></p>
+      <p><strong>Time:</strong> <span id="time"></span></p>
+      <p><strong>Base Price:</strong> ₱<span id="basePrice"></span></p>
+      <p><strong>Selected Class:</strong> <span id="selectedClass">Economy</span></p>
+      <p><strong>Total Price:</strong> ₱<span id="totalPrice"></span></p>
+      <p><strong>Airplane Code:</strong> <span id="code"></span></p>
+    </div>
+
+    <form id="bookingForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required />
+      </div>
+      <div class="form-group">
+        <label for="class">Flight Class</label>
+        <select id="class" onchange="updatePrice()">
+          <option value="Economy">Economy</option>
+          <option value="Business">Business</option>
+          <option value="First Class">First Class</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="seat">Seat Number</label>
+        <select id="seat" required>
+          <option value="">Select a seat</option>
+        </select>
+      </div>
+
+      <div id="seatMap"></div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color window-color"></div>Window</div>
+        <div class="legend-item"><div class="legend-color middle-color"></div>Middle</div>
+        <div class="legend-item"><div class="legend-color aisle-color"></div>Aisle</div>
+        <div class="legend-item"><div class="legend-color taken-color"></div>Taken</div>
+      </div>
+
+      <div class="form-group">
+        <label for="payment">Payment Method</label>
+        <select id="payment">
+          <option value="">Select Payment Method</option>
+          <option value="GCash">GCash</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="PayPal">PayPal</option>
+        </select>
+      </div>
+      <div id="paymentDetails" class="payment-details">
+        <p><strong>Send Payment To:</strong></p>
+        <p id="paymentInfo"></p>
+      </div>
+      <div class="form-group">
+        <label for="reference">Reference Number</label>
+        <input type="text" id="reference" placeholder="Enter payment reference number" required />
+      </div>
+      <button type="button" class="btn back-btn" onclick="window.location.href='index.html'">← Cancel booking</button>
+      <button type="submit" class="btn">Confirm Booking</button>
+    </form>
+  </div>
+
+  <script>
+        const slides = document.querySelectorAll('.bg-slide');
+  let current = 0;
+
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 10000); 
+
+    const params = new URLSearchParams(window.location.search);
+    let basePrice = parseFloat(params.get("price"));
+    const airplaneCode = params.get("code");
+    const storageKey = `bookedSeats_${airplaneCode}`;
+    const bookedSeats = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    document.getElementById("from").textContent = params.get("from");
+    document.getElementById("to").textContent = params.get("to");
+    document.getElementById("airLine").textContent = params.get("airLine");
+    document.getElementById("date").textContent = params.get("date");
+    document.getElementById("time").textContent = params.get("time");
+    document.getElementById("basePrice").textContent = basePrice.toFixed(2);
+    document.getElementById("totalPrice").textContent = basePrice.toFixed(2);
+    document.getElementById("code").textContent = airplaneCode;
+
+    function updatePrice() {
+      const selectedClass = document.getElementById("class").value;
+      let newPrice = basePrice;
+
+      if (selectedClass === "Business") newPrice *= 1.3;
+      else if (selectedClass === "First Class") newPrice *= 1.5;
+
+      document.getElementById("totalPrice").textContent = newPrice.toFixed(2);
+      document.getElementById("selectedClass").textContent = selectedClass;
+
+      generateSeatMap(selectedClass);
+    }
+    // Show payment details based on selection
+document.getElementById("payment").addEventListener("change", function () {
+  const paymentMethod = this.value;
+  const paymentDetails = document.getElementById("paymentDetails");
+  const paymentInfo = document.getElementById("paymentInfo");
+
+  if (paymentMethod === "GCash") {
+    paymentDetails.style.display = "block";
+    paymentInfo.innerHTML = `
+      <strong>GCash Number:</strong> 0917-123-4567<br>
+      <strong>Account Name:</strong> Juan Dela Cruz
+    `;
+  } else if (paymentMethod === "Bank Transfer") {
+    paymentDetails.style.display = "block";
+    paymentInfo.innerHTML = `
+      <strong>Bank Name:</strong> BDO<br>
+      <strong>Account Number:</strong> 0123-4567-8910<br>
+      <strong>Account Name:</strong> Juan Dela Cruz
+    `;
+  } else if (paymentMethod === "PayPal") {
+    paymentDetails.style.display = "block";
+    paymentInfo.innerHTML = `
+      <strong>PayPal Email:</strong> flights@juandcairlines.com<br>
+      <strong>Account Name:</strong> Juan Dela Cruz
+    `;
+  } else {
+    paymentDetails.style.display = "none";
+    paymentInfo.innerHTML = "";
+  }
+});
+
+
+    function generateSeatMap(selectedClass = "Economy") {
+      const seatDropdown = document.getElementById("seat");
+      const seatMapContainer = document.getElementById("seatMap");
+      seatDropdown.innerHTML = '<option value="">Select a seat</option>';
+      seatMapContainer.innerHTML = '';
+
+      const classSections = {
+        "First Class": { startRow: 1, endRow: 2 },
+        "Business": { startRow: 3, endRow: 4 },
+        "Economy": { startRow: 5, endRow: 11 }
+      };
+
+      for (let row = classSections[selectedClass].startRow; row <= classSections[selectedClass].endRow; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('seat-row');
+
+        for (let letter of ['A', 'B', 'C', 'D', 'E', 'F']) {
+          const seatNum = `${letter}${row}`;
+          const isTaken = bookedSeats.includes(seatNum);
+          const seatDiv = document.createElement('div');
+          seatDiv.classList.add('seat', isTaken ? 'taken' : 'available');
+
+          if (["A", "F"].includes(letter)) seatDiv.classList.add("window");
+          else if (["B", "E"].includes(letter)) seatDiv.classList.add("middle");
+          else if (["C", "D"].includes(letter)) seatDiv.classList.add("aisle");
+
+          seatDiv.textContent = seatNum;
+
+          if (!isTaken) {
+            const option = document.createElement("option");
+            option.value = seatNum;
+            option.textContent = seatNum;
+            seatDropdown.appendChild(option);
+
+            seatDiv.addEventListener('click', () => {
+              document.getElementById("seat").value = seatNum;
+              alert(`You selected seat ${seatNum}`);
+            });
+          }
+
+          rowDiv.appendChild(seatDiv);
+        }
+
+        seatMapContainer.appendChild(rowDiv);
+      }
+    }
+
+    generateSeatMap();
+
+    document.getElementById("bookingForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const airLine = document.getElementById("airLine").textContent;
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+  const flightClass = document.getElementById("class").value;
+  const payment = document.getElementById("payment").value;
+  const seat = document.getElementById("seat").value;
+  const reference = document.getElementById("reference").value;
+  const finalPrice = document.getElementById("totalPrice").textContent;
+
+  if (!payment) return alert("Please select a payment method.");
+  if (!reference) return alert("Please enter your payment reference number.");
+  if (!seat) return alert("Please select a seat.");
+
+  const confirmationMessage = `Booking Summary:\n\nAir Line: ${airLine}\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nClass: ${flightClass}\nSeat: ${seat}\nPayment: ${payment}\nReference Number: ${reference}\nTotal Price: ₱${finalPrice}\n\nAre you sure you want to confirm this booking?`;
+
+  const isConfirmed = confirm(confirmationMessage);
+
+  if (!isConfirmed) {
+    alert("Booking not confirmed. You may now make edits.");
+    return;
+  }
+
+  // Save booked seat per airplane
+  let updatedSeats = JSON.parse(localStorage.getItem(storageKey) || "[]");
+  if (!updatedSeats.includes(seat)) {
+    updatedSeats.push(seat);
+    localStorage.setItem(storageKey, JSON.stringify(updatedSeats));
+  }
+
+  alert("Booking Confirmed!");
+
+  window.location.href = `confirmation.html?airLine=${encodeURIComponent(airLine)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&class=${encodeURIComponent(flightClass)}&seat=${encodeURIComponent(seat)}&payment=${encodeURIComponent(payment)}&reference=${encodeURIComponent(reference)}&totalPrice=${encodeURIComponent(finalPrice)}&from=${params.get("from")}&to=${params.get("to")}&date=${params.get("date")}&time=${params.get("time")}&code=${airplaneCode}`;
+});
+
+  </script>
+</body>
+</html>
